@@ -12,7 +12,6 @@ public class AppStarter {
     protected Logger log = java.util.logging.Logger.getLogger(AppStarter.class.getName());
 
     public static void main(String[] args) {
-        System.setProperty("spring.config.name", "application.yml");
         SpringApplication.run(App.class, args);
     }
 }
