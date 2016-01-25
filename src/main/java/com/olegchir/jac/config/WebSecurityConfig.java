@@ -15,6 +15,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().anyRequest().permitAll();
+
+        //http://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/#csrf
         http.csrf().disable();
+
+        //http://docs.spring.io/spring-security/site/docs/3.2.0.CI-SNAPSHOT/reference/html/appendix-namespace.html#nsa-frame-options
+        http.headers().frameOptions().disable();
     }
 }
