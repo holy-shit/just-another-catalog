@@ -49,6 +49,12 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
         return createDao().count(new Search().setDistinct(true).setFilters(Lists.newArrayList(filters)));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<T> findAll() {
+        return search(-1, -1, Optional.empty(), Optional.empty(), Optional.empty());
+    }
+
 
 
     @Override
