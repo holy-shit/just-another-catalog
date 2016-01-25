@@ -55,8 +55,15 @@
         <dependency>
             <groupId>com.googlecode.genericdao</groupId>
             <artifactId>dao-hibernate</artifactId>
-            <version>1.2.0</version> <!-- use current version -->
+            <version>1.2.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
