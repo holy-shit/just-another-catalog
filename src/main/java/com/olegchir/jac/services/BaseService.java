@@ -15,7 +15,8 @@ public interface BaseService<T, ID> {
     void save(T... entity);
     List<T> search(int page, int count, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders);
     SearchResult<T> searchAndCount(int page, int count, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders);
+    T searchUnique(int page, int count, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders);
     List<T> findAll();
-    boolean existsForFilters(Filter... filters);
-    int countForFilters(Filter... filters);
+    boolean exists(Filter... filters);
+    int count(Filter... filters);
 }

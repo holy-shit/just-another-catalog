@@ -36,16 +36,15 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
         dao.save(entity);
     }
 
-
     @Override
     @Transactional(readOnly = true)
-    public boolean existsForFilters(Filter... filters) {
-        return countForFilters(filters) > 0;
+    public boolean exists(Filter... filters) {
+        return count(filters) > 0;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int countForFilters(Filter... filters) {
+    public int count(Filter... filters) {
         return createDao().count(new Search().setDistinct(true).setFilters(Lists.newArrayList(filters)));
     }
 
@@ -65,6 +64,12 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
     @Transactional(readOnly = true)
     public SearchResult<T>  searchAndCount(int page, int count, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders) {
         return createDao().searchAndCount(createSearch(page, count, filters, fetches, orders));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public T searchUnique(int page, int count, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders) {
+        return createDao().searchUnique(createSearch(page, count, filters, fetches, orders));
     }
 
     private ISearch createSearch(int page, int size, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders){
