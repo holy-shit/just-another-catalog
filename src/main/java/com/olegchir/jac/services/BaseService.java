@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface BaseService<T, ID> {
     void save(T... entity);
     List<T> search(int page, int count, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders);
+    boolean existsForFilters(Filter... filters);
+    int countForFilters(Filter... filters);
 }

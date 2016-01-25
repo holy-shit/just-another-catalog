@@ -36,10 +36,25 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
         dao.save(entity);
     }
 
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsForFilters(Filter... filters) {
+        return countForFilters(filters) > 0;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int countForFilters(Filter... filters) {
+        return createDao().count(new Search().setDistinct(true).setFilters(Lists.newArrayList(filters)));
+    }
+
+
+
     @Override
     @Transactional(readOnly = true)
     public List<T> search(int page, int count, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders) {
-        Dao<T, ID> dao = daoFactory.getDaoForClass(clazz);
+        Dao<T, ID> dao = createDao();
         return dao.search(createSearch(page, count, filters, fetches, orders));
     }
 
@@ -55,6 +70,10 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
         });
 
         return search;
+    }
+
+    public Dao<T, ID> createDao() {
+        return daoFactory.getDaoForClass(clazz);
     }
 
 }
