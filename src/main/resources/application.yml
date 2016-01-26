@@ -4,8 +4,4 @@ spring:
     active: hsqldb
   application:
      name: jac
-  freemarker:
-    enabled: true
-  thymeleaf:
-    cache: false                     # Allow Thymeleaf templates to be reloaded at runtime
-    prefix: classpath:/templates/    # Trailing / mandatory
+

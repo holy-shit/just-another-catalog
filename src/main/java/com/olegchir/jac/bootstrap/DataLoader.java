@@ -18,42 +18,10 @@ import java.util.*;
 
 @Component
 public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
-
-    @Autowired
-    ProductService productService;
-
-    @Autowired
-    CategoryService categoryService;
-
     private Logger log = Logger.getLogger(DataLoader.class);
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        //TODO: data initialization here
 
-        Category category = new Category();
-        category.setName("catname");
-        category.setDescription("catdescr");
-        categoryService.save(category);
-        Long categoryId = category.getId();
-
-        Product product = new Product();
-        product.setName("name");
-        product.setDescription("description");
-        product.setCategory(category);
-        productService.save(product);
-        Long productId = product.getId();
-
-        categoryService.refresh(category);
-        Set<Product> products = category.getProducts();
-
-        for (Product item : products) {
-            item.setCategory(null);
-        }
-        categoryService.mergeSave(category);
-        categoryService.refresh(category);
-
-        categoryService.removeById(categoryId);
-        Product product2 = productService.find(productId, Optional.of(Arrays.asList("category")));
     }
 }
