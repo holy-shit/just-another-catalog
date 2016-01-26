@@ -5,14 +5,12 @@ import com.googlecode.genericdao.search.*;
 import com.olegchir.jac.dao.Dao;
 import com.olegchir.jac.dao.DaoFactory;
 import com.olegchir.jac.services.BaseService;
+import com.olegchir.jac.services.SearchPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by olegchir on 25/01/16.
@@ -30,51 +28,84 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
 
 
     @Override
+    @Transactional(readOnly = true)
+    public boolean exists(boolean distinct, Filter... filters) {
+        return count(distinct, filters) > 0;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int count(boolean distinct, Filter... filters) {
+        return createDao().count(new Search().setDistinct(distinct).setFilters(Lists.newArrayList(filters)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<T> findAll(boolean distinct) {
+        return search(distinct, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<T> search(boolean distinct, Optional<SearchPage> page, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders) {
+        return createDao().search(createSearch(distinct, page, filters, fetches, orders));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public SearchResult<T>  searchAndCount(boolean distinct, Optional<SearchPage> page, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders) {
+        return createDao().searchAndCount(createSearch(distinct, page, filters, fetches, orders));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public T searchUnique(Optional<SearchPage> page, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders) {
+        return createDao().searchUnique(createSearch(true, page, filters, fetches, orders));
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void removeById(ID id) {
+        createDao().removeById(id);
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public void save(T... entity) {
-        Dao<T, ID> dao = daoFactory.getDaoForClass(clazz);
-        dao.save(entity);
+        createDao().save(entity);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public boolean exists(Filter... filters) {
-        return count(filters) > 0;
+    public List<T> refresh(T... entity) {
+        createDao().refresh(entity);
+        return Arrays.asList(entity);
+    }
+
+    @Override
+    public T refresh(T entity) {
+        createDao().refresh(entity);
+        return entity;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void save(Collection<T> entities) {
+        createDao().save(entities);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int count(Filter... filters) {
-        return createDao().count(new Search().setDistinct(true).setFilters(Lists.newArrayList(filters)));
+    public T find(ID id) {
+        return createDao().find(id);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<T> findAll() {
-        return search(-1, -1, Optional.empty(), Optional.empty(), Optional.empty());
-    }
+    private ISearch createSearch(boolean distinct, Optional<SearchPage> page, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders){
+        IMutableSearch search = new Search().setDistinct(distinct);
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<T> search(int page, int count, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders) {
-        return createDao().search(createSearch(page, count, filters, fetches, orders));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public SearchResult<T>  searchAndCount(int page, int count, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders) {
-        return createDao().searchAndCount(createSearch(page, count, filters, fetches, orders));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public T searchUnique(int page, int count, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders) {
-        return createDao().searchUnique(createSearch(page, count, filters, fetches, orders));
-    }
-
-    private ISearch createSearch(int page, int size, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders){
-        IMutableSearch search = new Search().setDistinct(true).setPage(page).setMaxResults(size);
-
+        page.ifPresent(item -> {
+            search.setPage(item.getPage()).setMaxResults(item.getSize());
+        });
         filters.ifPresent(item -> search.setFilters(Lists.newArrayList(item)));
         fetches.ifPresent(item -> search.setFetches(Lists.newArrayList(item)));
         orders.ifPresent(item -> {

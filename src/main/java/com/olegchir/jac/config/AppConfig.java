@@ -52,6 +52,7 @@ public class AppConfig {
         Properties props = new Properties();
         props.put("hibernate.dialect", DATABASE_DIALECT);
         props.put("ddl-auto", "create-drop");
+        props.put("show-sql", true);
         bean.setHibernateProperties(props);
 
         return bean;

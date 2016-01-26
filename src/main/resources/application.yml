@@ -1,7 +1,7 @@
 # Spring properties
 spring:
   profiles:
-    active: h2
+    active: hsqldb
   application:
      name: jac
   freemarker:
