@@ -1,8 +1,7 @@
-package com.olegchir.jac.services;
+package com.olegchir.jac.services.framework;
 
 import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.SearchResult;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;

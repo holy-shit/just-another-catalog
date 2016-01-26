@@ -1,12 +1,9 @@
-package com.olegchir.jac.services.impl;
+package com.olegchir.jac.services.framework;
 
 import com.google.common.collect.Lists;
 import com.googlecode.genericdao.search.*;
 import com.olegchir.jac.dao.Dao;
 import com.olegchir.jac.dao.DaoFactory;
-import com.olegchir.jac.services.BaseService;
-import com.olegchir.jac.services.SearchPage;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;

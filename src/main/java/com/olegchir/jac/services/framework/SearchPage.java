@@ -1,4 +1,4 @@
-package com.olegchir.jac.services;
+package com.olegchir.jac.services.framework;
 
 /**
  * Created by olegchir on 26/01/16.

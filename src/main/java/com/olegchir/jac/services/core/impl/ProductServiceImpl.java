@@ -1,7 +1,8 @@
-package com.olegchir.jac.services.impl;
+package com.olegchir.jac.services.core.impl;
 
 import com.olegchir.jac.entities.Product;
-import com.olegchir.jac.services.ProductService;
+import com.olegchir.jac.services.core.ProductService;
+import com.olegchir.jac.services.framework.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
