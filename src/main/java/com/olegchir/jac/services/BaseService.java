@@ -20,8 +20,12 @@ public interface BaseService<T, ID> {
     int count(boolean distinct, Filter... filters);
     void removeById(ID id);
     void save(T... entity);
+    boolean[] mergeSave(Collection<T> entityList);
+    boolean[] mergeSave(T... entity);
+    void flush();
     List<T> refresh(T... entity);
     T refresh(T entity);
     void save(Collection<T> entities);
     T find(ID id);
+    T find(ID id, Optional<Collection<String>> fetches);
 }

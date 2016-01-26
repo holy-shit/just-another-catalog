@@ -6,7 +6,9 @@ import com.olegchir.jac.dao.Dao;
 import com.olegchir.jac.dao.DaoFactory;
 import com.olegchir.jac.services.BaseService;
 import com.olegchir.jac.services.SearchPage;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -83,6 +85,7 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
     }
 
     @Override
+    @Transactional
     public T refresh(T entity) {
         createDao().refresh(entity);
         return entity;
@@ -98,6 +101,31 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
     @Transactional(readOnly = true)
     public T find(ID id) {
         return createDao().find(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public T find(ID id, Optional<Collection<String>> fetches) {
+        List<Filter> filters = Arrays.asList(Filter.equal("id", id));
+        return searchUnique(Optional.empty(), Optional.of(filters), fetches, Optional.empty());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public boolean[] mergeSave(Collection<T> entityList) {
+        return createDao().mergeSave(entityList);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public boolean[] mergeSave(T... entity) {
+        return createDao().mergeSave(entity);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void flush() {
+        createDao().flush();
     }
 
     private ISearch createSearch(boolean distinct, Optional<SearchPage> page, Optional<Collection<Filter>> filters, Optional<Collection<String>> fetches, Optional<Collection<String>> orders){

@@ -36,6 +36,9 @@ public class Product {
     @Column(columnDefinition = "VARBINARY(2147483647)") //Integer.MAX_VALUE
     private byte[] image;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE} )
+    private Category category;
+
     public Long getId() {
         return id;
     }
@@ -91,5 +94,13 @@ public class Product {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
