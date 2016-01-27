@@ -31,7 +31,7 @@ import java.util.Properties;
 @ComponentScan(basePackages = {"com.olegchir.jac"})
 @EntityScan(basePackages = {"com.olegchir.jac.entities"})
 @EnableTransactionManagement
-@Import(TilesConfig.class)
+@Import({TilesConfig.class, DisableErrorFilter.class})
 public class AppConfig {
 
     public static final String DATABASE_DIALECT = "org.hibernate.dialect.HSQLDialect";
